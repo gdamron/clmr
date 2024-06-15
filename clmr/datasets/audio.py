@@ -1,10 +1,9 @@
 import os
 from glob import glob
 from torch import Tensor
-from typing import Tuple
 
 
-from clmr.datasets import Dataset
+from clmr.datasets.dataset import Dataset
 
 
 class AUDIO(Dataset):
@@ -42,7 +41,7 @@ class AUDIO(Dataset):
         fp = self.fl[n]
         return fp
 
-    def __getitem__(self, n: int) -> Tuple[Tensor, Tensor]:
+    def __getitem__(self, n: int) -> tuple[Tensor, Tensor]:
         """Load the n-th sample from the dataset.
 
         Args:

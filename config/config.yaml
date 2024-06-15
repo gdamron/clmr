@@ -1,14 +1,14 @@
 # infra options
-# gpus: 0
-# accelerator: "dp" # use ddp for gpus > 1. Also see PyTorch Lightning documentation on distributed training.
-workers: 0 # I recommend tuning this parameter for faster data augmentation processing
+gpus: 0
+accelerator: "auto" # use ddp for gpus > 1. Also see PyTorch Lightning documentation on distributed training.
+workers: 11 # I recommend tuning this parameter for faster data augmentation processing
 dataset_dir: "./data"
 
 # train options
 seed: 42
 batch_size: 48
-# max_epochs: 200
-dataset: "magnatagatune" # ["magnatagatune", "msd", "gtzan", "audio"]
+max_epochs: 200
+dataset: "audio" # ["magnatagatune", "msd", "gtzan", "audio"]
 supervised: 0 # train with supervised baseline
 
 # SimCLR model options
@@ -21,7 +21,7 @@ weight_decay: 1.0e-6 # "optimized using LARS [...] and weight decay of 10−6"
 temperature: 0.5 # see appendix B.7.: Optimal temperature under different batch sizes
 
 # reload options
-checkpoint_path: "" # set to the directory containing `checkpoint_##.tar`
+checkpoint_path: "./runs/CLMRv2-audio/version_0/checkpoints" # set to the directory containing `checkpoint_##.tar`
 
 # logistic regression options
 finetuner_mlp: 0

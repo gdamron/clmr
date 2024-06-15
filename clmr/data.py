@@ -1,20 +1,20 @@
 """Wrapper for Torch Dataset class to enable contrastive training
 """
+
 import torch
 from torch import Tensor
 from torch.utils.data import Dataset
 from torchaudio_augmentations import Compose
-from typing import Tuple, List
 
 
 class ContrastiveDataset(Dataset):
-    def __init__(self, dataset: Dataset, input_shape: List[int], transform: Compose):
+    def __init__(self, dataset: Dataset, input_shape: list[int], transform: Compose):
         self.dataset = dataset
         self.transform = transform
         self.input_shape = input_shape
         self.ignore_idx = []
 
-    def __getitem__(self, idx) -> Tuple[Tensor, Tensor]:
+    def __getitem__(self, idx) -> tuple[Tensor, Tensor]:
         if idx in self.ignore_idx:
             return self[idx + 1]
 

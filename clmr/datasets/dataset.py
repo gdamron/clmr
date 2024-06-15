@@ -20,7 +20,7 @@ class Dataset(TorchDataset):
         pass
 
     @abstractmethod
-    def file_path(self, n: int):
+    def file_path(self, n: int) -> str:
         pass
 
     def target_file_path(self, n: int) -> str:

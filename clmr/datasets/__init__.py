@@ -1,5 +1,4 @@
 import os
-from .dataset import Dataset
 from .audio import AUDIO
 from .librispeech import LIBRISPEECH
 from .gtzan import GTZAN
@@ -7,7 +6,7 @@ from .magnatagatune import MAGNATAGATUNE
 from .million_song_dataset import MillionSongDataset
 
 
-def get_dataset(dataset, dataset_dir, subset, download=True):
+def get_dataset(dataset: str, dataset_dir: str, subset: str, download: bool = True):
 
     if not os.path.exists(dataset_dir):
         os.makedirs(dataset_dir)

@@ -4,11 +4,10 @@ import torch
 import torchaudio
 from collections import defaultdict
 from pathlib import Path
-from torch import Tensor, FloatTensor
-from tqdm import tqdm
-from typing import Any, Tuple, Optional
+from torch import Tensor
+from typing import Tuple, Optional
 
-from clmr.datasets import Dataset
+from clmr.datasets.dataset import Dataset
 
 
 def load_id2gt(gt_file, msd_7d):

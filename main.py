@@ -1,5 +1,7 @@
 import argparse
 import pytorch_lightning as pl
+import torch.multiprocessing
+
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from pytorch_lightning import Trainer
 from pytorch_lightning.loggers import TensorBoardLogger
@@ -27,10 +29,16 @@ from clmr.modules import ContrastiveLearning, SupervisedLearning
 from clmr.utils import yaml_config_hook
 
 
+def set_worker_sharing_strategy(worker_id: int = 0) -> None:
+    print("Setting share stragegy to file_system")
+    torch.multiprocessing.set_sharing_strategy("file_system")
+
+
 if __name__ == "__main__":
+    print(torch.multiprocessing.get_all_sharing_strategies())
+    set_worker_sharing_strategy()
 
     parser = argparse.ArgumentParser(description="CLMR")
-    parser = Trainer.add_argparse_args(parser)
 
     config = yaml_config_hook("./config/config.yaml")
     for k, v in config.items():
@@ -96,7 +104,9 @@ if __name__ == "__main__":
         batch_size=args.batch_size,
         num_workers=args.workers,
         drop_last=True,
+        persistent_workers=True,
         shuffle=True,
+        worker_init_fn=set_worker_sharing_strategy,
     )
 
     valid_loader = DataLoader(
@@ -104,7 +114,9 @@ if __name__ == "__main__":
         batch_size=args.batch_size,
         num_workers=args.workers,
         drop_last=True,
+        persistent_workers=True,
         shuffle=False,
+        worker_init_fn=set_worker_sharing_strategy,
     )
 
     # ------------
@@ -140,8 +152,7 @@ if __name__ == "__main__":
         else:
             early_stopping = None
 
-        trainer = Trainer.from_argparse_args(
-            args,
+        trainer = Trainer(
             logger=logger,
             sync_batchnorm=True,
             max_epochs=args.max_epochs,

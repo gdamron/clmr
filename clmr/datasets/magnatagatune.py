@@ -1,25 +1,16 @@
 import os
-import warnings
-import subprocess
-import torch
 import numpy as np
-import zipfile
-from collections import defaultdict
-from typing import Any, Tuple, Optional
-from tqdm import tqdm
+from typing import Tuple, Optional
 
-import soundfile as sf
-import torchaudio
-
-torchaudio.set_audio_backend("soundfile")
 from torch import Tensor, FloatTensor
-from torchaudio.datasets.utils import (
-    download_url,
-    extract_archive,
-)
+from torch.hub import download_url_to_file
 
-from clmr.datasets import Dataset
+from torchtext import disable_torchtext_deprecation_warning
+from torchtext.utils import extract_archive
 
+from clmr.datasets.dataset import Dataset
+
+disable_torchtext_deprecation_warning()
 
 FOLDER_IN_ARCHIVE = "magnatagatune"
 _CHECKSUMS = {
@@ -39,7 +30,7 @@ _CHECKSUMS = {
 }
 
 
-def get_file_list(root, subset, split):
+def get_file_list(root: str, subset: str, split: str):
     if subset == "train":
         if split == "pons2017":
             fl = open(os.path.join(root, "train_gt_mtt.tsv")).read().splitlines()
@@ -124,7 +115,7 @@ class MAGNATAGATUNE(Dataset):
                     zip_files.append(target_fp)
 
                 if not os.path.exists(target_fp):
-                    download_url(
+                    download_url_to_file(
                         url,
                         self._path,
                         filename=target_fn,

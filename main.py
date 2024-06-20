@@ -35,7 +35,6 @@ def set_worker_sharing_strategy(worker_id: int = 0) -> None:
 
 
 if __name__ == "__main__":
-    print(torch.multiprocessing.get_all_sharing_strategies())
     set_worker_sharing_strategy()
 
     parser = argparse.ArgumentParser(description="CLMR")

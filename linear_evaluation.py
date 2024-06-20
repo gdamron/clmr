@@ -22,7 +22,6 @@ from clmr.utils import (
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="SimCLR")
-    parser = Trainer.add_argparse_args(parser)
 
     config = yaml_config_hook("./config/config.yaml")
     for k, v in config.items():
@@ -132,11 +131,11 @@ if __name__ == "__main__":
             monitor="Valid/loss", patience=10, verbose=False, mode="min"
         )
 
-        trainer = Trainer.from_argparse_args(
-            args,
+        trainer = Trainer(
             logger=TensorBoardLogger(
                 "runs", name="CLMRv2-eval-{}".format(args.dataset)
             ),
+            accelerator=args.accelerator,
             max_epochs=args.finetuner_max_epochs,
             callbacks=[early_stop_callback],
         )

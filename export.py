@@ -31,14 +31,16 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--checkpoint_path", type=str, required=True)
-    parser.add_argument("--finetuner_checkpoint_path", type=str, required=True)
+    parser.add_argument("--finetuner_checkpoint_path", type=str, required=False)
     parser.add_argument("--n_classes", type=int, default=50)
     args = parser.parse_args()
 
     if not os.path.exists(args.checkpoint_path):
         raise FileNotFoundError("That encoder checkpoint does not exist")
 
-    if not os.path.exists(args.finetuner_checkpoint_path):
+    if args.finetuner_checkpoint_path and not os.path.exists(
+        args.finetuner_checkpoint_path
+    ):
         raise FileNotFoundError("That linear model checkpoint does not exist")
 
     # ------------
@@ -59,10 +61,11 @@ if __name__ == "__main__":
     # ------------
     # linear model
     # ------------
-    state_dict = load_finetuner_checkpoint(args.finetuner_checkpoint_path)
-    encoder.fc.load_state_dict(
-        OrderedDict({k.replace("0.", ""): v for k, v in state_dict.items()})
-    )
+    if args.finetuner_checkpoint_path:
+        state_dict = load_finetuner_checkpoint(args.finetuner_checkpoint_path)
+        encoder.fc.load_state_dict(
+            OrderedDict({k.replace("0.", ""): v for k, v in state_dict.items()})
+        )
 
     encoder_export = deepcopy(encoder)
     # set last fully connected layer to an identity function:
